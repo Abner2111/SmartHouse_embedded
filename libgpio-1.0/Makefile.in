@@ -332,6 +332,7 @@ top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 SUBDIRS = lib src
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = LICENCE
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 

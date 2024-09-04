@@ -211,13 +211,13 @@ distuninstallcheck_listfiles = find . -type f -print
 am__distuninstallcheck_listfiles = $(distuninstallcheck_listfiles) \
   | sed 's|^\./|$(prefix)/|' | grep -v '$(infodir)/dir$$'
 distcleancheck_listfiles = find . -type f -print
-ACLOCAL = ${SHELL} '/home/abner/Desktop/libgpio-1.0/build-aux/missing' aclocal-1.16
+ACLOCAL = ${SHELL} '/home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/missing' aclocal-1.16
 AMTAR = $${TAR-tar}
 AM_DEFAULT_VERBOSITY = 1
 AR = arm-poky-linux-gnueabi-ar
-AUTOCONF = ${SHELL} '/home/abner/Desktop/libgpio-1.0/build-aux/missing' autoconf
-AUTOHEADER = ${SHELL} '/home/abner/Desktop/libgpio-1.0/build-aux/missing' autoheader
-AUTOMAKE = ${SHELL} '/home/abner/Desktop/libgpio-1.0/build-aux/missing' automake-1.16
+AUTOCONF = ${SHELL} '/home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/missing' autoconf
+AUTOHEADER = ${SHELL} '/home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/missing' autoheader
+AUTOMAKE = ${SHELL} '/home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/missing' automake-1.16
 AWK = gawk
 CC = arm-poky-linux-gnueabi-gcc  -mthumb -mfpu=neon-vfpv4 -mfloat-abi=hard -mcpu=cortex-a7 -fstack-protector-strong  -O2 -D_FORTIFY_SOURCE=2 -Wformat -Wformat-security -Werror=format-security -D_TIME_BITS=64 -D_FILE_OFFSET_BITS=64 --sysroot=/opt/poky/5.0.3/sysroots/cortexa7t2hf-neon-vfpv4-poky-linux-gnueabi
 CCDEPMODE = depmode=gcc3
@@ -254,7 +254,7 @@ LIPO =
 LN_S = ln -s
 LTLIBOBJS = 
 LT_SYS_LIBRARY_PATH = 
-MAKEINFO = ${SHELL} '/home/abner/Desktop/libgpio-1.0/build-aux/missing' makeinfo
+MAKEINFO = ${SHELL} '/home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/missing' makeinfo
 MANIFEST_TOOL = :
 MKDIR_P = /usr/bin/mkdir -p
 NM = arm-poky-linux-gnueabi-nm
@@ -277,10 +277,10 @@ SET_MAKE =
 SHELL = /bin/sh
 STRIP = arm-poky-linux-gnueabi-strip
 VERSION = 1.0
-abs_builddir = /home/abner/Desktop/libgpio-1.0/build
-abs_srcdir = /home/abner/Desktop/libgpio-1.0/build/..
-abs_top_builddir = /home/abner/Desktop/libgpio-1.0/build
-abs_top_srcdir = /home/abner/Desktop/libgpio-1.0/build/..
+abs_builddir = /home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build
+abs_srcdir = /home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build/..
+abs_top_builddir = /home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build
+abs_top_srcdir = /home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build/..
 ac_ct_AR = 
 ac_ct_CC = 
 ac_ct_DUMPBIN = 
@@ -309,7 +309,7 @@ host_vendor = poky
 htmldir = ${docdir}
 includedir = ${prefix}/include
 infodir = ${datarootdir}/info
-install_sh = ${SHELL} /home/abner/Desktop/libgpio-1.0/build-aux/install-sh
+install_sh = ${SHELL} /home/abner/Desktop/SmartHouse_embedded/libgpio-1.0/build-aux/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localedir = ${datarootdir}/locale
@@ -332,6 +332,7 @@ top_builddir = .
 top_srcdir = ..
 SUBDIRS = lib src
 ACLOCAL_AMFLAGS = -I m4
+EXTRA_DIST = LICENCE
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
 
