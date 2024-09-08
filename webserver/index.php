@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPIO Control and Camera</title>
+    <title>GPIO and Camera Control</title>
     <script>
         // Function to control the light and display the response
         function controlLight() {
@@ -45,6 +45,26 @@
             xhr.send(params);
         }
 
+        // Function to check door status and display it
+        function checkDoorStatus() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "script.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('door_status').textContent = 
+                        "Door " + response.door + " status: " + response.status;
+                } else {
+                    document.getElementById('door_status').textContent = "Error checking door status.";
+                }
+            };
+
+            var door = document.getElementById('door_check').value;
+            var params = 'action=check_door&door=' + door;
+            xhr.send(params);
+        }
+
         // Function to capture the image and display it
         function captureImage() {
             var xhr = new XMLHttpRequest();
@@ -68,7 +88,7 @@
     </script>
 </head>
 <body>
-    <h1>GPIO Light Control and Camera</h1>
+    <h1>GPIO and Camera Control</h1>
 
     <!-- Form to control light using AJAX -->
     <h3>Control Light</h3>
@@ -105,8 +125,23 @@
     <!-- Area to display light status -->
     <p id="light_status"></p>
 
+    <!-- Form to check door status using AJAX -->
+    <h3>Check Door Status</h3>
+    <label for="door_check">Select Door:</label>
+    <select name="door_check" id="door_check">
+        <option value="1">Door 1</option>
+        <option value="2">Door 2</option>
+        <option value="3">Door 3</option>
+        <option value="4">Door 4</option>
+    </select><br><br>
+
+    <button type="button" onclick="checkDoorStatus()">Check Door Status</button>
+
+    <!-- Area to display door status -->
+    <p id="door_status"></p>
+
     <!-- Button to capture image -->
-    <h3>Check Camera</h3>
+    <h3>Capture Image</h3>
     <button onclick="captureImage()">Capture Image</button>
     
     <!-- Area to display captured image -->

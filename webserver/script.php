@@ -49,6 +49,25 @@ if ($_POST['action'] == 'control_light') {
             "status" => trim($output)
         ]);
     }
+    if($_POST['action'] == 'check_door'){
+        $command = "gpio_handler read";
+        $gpio_pin = "";
+        $space = " ";
+        if($_POST['door'] == 1){
+            $gpio_pin = "5";
+        } elseif ($_POST['door'] == 2){
+            $gpio_pin = "6";
+        } elseif ($_POST['door'] == 3){
+            $gpio_pin = "13";
+        } elseif ($_POST['door'] == 4){
+            $gpio_pin = "19";
+        }
+        $output = shell_exec($command . $space . $gpio_pin);
+        echo json_encode([
+            "door" => $_POST['door'], 
+            "status" => trim($output)
+        ]);
+    }
     if ($_POST['action'] == 'check_camera') {
         $image_file = '/tmp/captured_image.jpeg'; 
         $command = "fswebcam -r 640x480 --jpeg -D 1 $image_file"; 
