@@ -5,6 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPIO Control and Camera</title>
     <script>
+        // Function to control the light and display the response
+        function controlLight() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "script.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('control_message').textContent = response.message;
+                } else {
+                    document.getElementById('control_message').textContent = "Error controlling the light.";
+                }
+            };
+
+            var light = document.getElementById('light').value;
+            var value = document.getElementById('value').value;
+            var params = 'action=control_light&light=' + light + '&value=' + value;
+            xhr.send(params);
+        }
+
+        // Function to check light status and display it
+        function checkLightStatus() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "script.php", true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+                    document.getElementById('light_status').textContent = 
+                        "Light " + response.light + " status: " + response.status;
+                } else {
+                    document.getElementById('light_status').textContent = "Error checking light status.";
+                }
+            };
+
+            var light = document.getElementById('light_check').value;
+            var params = 'action=check_light&light=' + light;
+            xhr.send(params);
+        }
+
+        // Function to capture the image and display it
         function captureImage() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "script.php", true);
@@ -29,40 +70,40 @@
 <body>
     <h1>GPIO Light Control and Camera</h1>
 
-    <!-- Form to control light -->
-    <form method="POST" action="script.php">
-        <h3>Control Light</h3>
-        <label for="light">Select Light:</label>
-        <select name="light" id="light">
-            <option value="1">Light 1</option>
-            <option value="2">Light 2</option>
-            <option value="3">Light 3</option>
-            <option value="4">Light 4</option>
-            <option value="5">Light 5</option>
-        </select><br><br>
+    <!-- Form to control light using AJAX -->
+    <h3>Control Light</h3>
+    <label for="light">Select Light:</label>
+    <select name="light" id="light">
+        <option value="1">Light 1</option>
+        <option value="2">Light 2</option>
+        <option value="3">Light 3</option>
+        <option value="4">Light 4</option>
+        <option value="5">Light 5</option>
+    </select><br><br>
 
-        <label for="value">Set Value (0 or 1):</label>
-        <input type="number" name="value" id="value" min="0" max="1"><br><br>
+    <label for="value">Set Value (0 or 1):</label>
+    <input type="number" name="value" id="value" min="0" max="1"><br><br>
 
-        <input type="hidden" name="action" value="control_light">
-        <button type="submit">Control Light</button>
-    </form>
+    <button type="button" onclick="controlLight()">Control Light</button>
 
-    <!-- Form to check light status -->
-    <form method="POST" action="script.php">
-        <h3>Check Light Status</h3>
-        <label for="light_check">Select Light:</label>
-        <select name="light" id="light_check">
-            <option value="1">Light 1</option>
-            <option value="2">Light 2</option>
-            <option value="3">Light 3</option>
-            <option value="4">Light 4</option>
-            <option value="5">Light 5</option>
-        </select><br><br>
+    <!-- Area to display control response -->
+    <p id="control_message"></p>
 
-        <input type="hidden" name="action" value="check_light">
-        <button type="submit">Check Status</button>
-    </form>
+    <!-- Form to check light status using AJAX -->
+    <h3>Check Light Status</h3>
+    <label for="light_check">Select Light:</label>
+    <select name="light_check" id="light_check">
+        <option value="1">Light 1</option>
+        <option value="2">Light 2</option>
+        <option value="3">Light 3</option>
+        <option value="4">Light 4</option>
+        <option value="5">Light 5</option>
+    </select><br><br>
+
+    <button type="button" onclick="checkLightStatus()">Check Status</button>
+
+    <!-- Area to display light status -->
+    <p id="light_status"></p>
 
     <!-- Button to capture image -->
     <h3>Check Camera</h3>
@@ -70,17 +111,5 @@
     
     <!-- Area to display captured image -->
     <div id="camera_result"></div>
-
-    <!-- PHP handling response for other actions -->
-    <div>
-        <h3>Response:</h3>
-        <pre>
-        <?php
-            if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-                include 'script.php';
-            }
-        ?>
-        </pre>
-    </div>
 </body>
 </html>
