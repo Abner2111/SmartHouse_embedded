@@ -41,6 +41,21 @@
         $output = shell_exec($command . $space . $gpio_pin);
         echo($output);
     }
+    if ($_POST['action'] == 'check_camera') {
+        $image_file = '/tmp/captured_image.webp'; 
+        $command = "fswebcam -r 640x480 --webp  0 -D 1 $image_file"; 
+    
+        system($command);
+  
+        if (file_exists($image_file)) {
+            header('Content-Type: image/webp');
+            header('Content-Length: ' . filesize($image_file));
+            readfile($image_file);
+            unlink($image_file); 
+        } else {
+            echo "Error capturing image.";
+        }
+    }
     
     
     

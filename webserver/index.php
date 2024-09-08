@@ -3,10 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GPIO Control</title>
+    <title>GPIO Control and Camera</title>
+    <script>
+        function captureImage() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "script.php", true);
+            xhr.responseType = "blob"; // Expect binary data (image)
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    var img = document.createElement("img");
+                    img.src = window.URL.createObjectURL(xhr.response);
+                    document.getElementById('camera_result').innerHTML = '';
+                    document.getElementById('camera_result').appendChild(img);
+                } else {
+                    document.getElementById('camera_result').innerHTML = 'Error capturing image.';
+                }
+            };
+
+            var formData = new FormData();
+            formData.append('action', 'check_camera');
+            xhr.send(formData);
+        }
+    </script>
 </head>
 <body>
-    <h1>GPIO Light Control</h1>
+    <h1>GPIO Light Control and Camera</h1>
 
     <!-- Form to control light -->
     <form method="POST" action="script.php">
@@ -43,7 +64,14 @@
         <button type="submit">Check Status</button>
     </form>
 
-    <!-- PHP handling response -->
+    <!-- Button to capture image -->
+    <h3>Check Camera</h3>
+    <button onclick="captureImage()">Capture Image</button>
+    
+    <!-- Area to display captured image -->
+    <div id="camera_result"></div>
+
+    <!-- PHP handling response for other actions -->
     <div>
         <h3>Response:</h3>
         <pre>
