@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GPIO and Camera Control</title>
     <script>
-        // Function to control the light and display the response
+        // Function to control the light and display the response (POST with JSON)
         function controlLight() {
             var xhr = new XMLHttpRequest();
             xhr.open("POST", "script.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -21,14 +21,21 @@
 
             var light = document.getElementById('light').value;
             var value = document.getElementById('value').value;
-            var params = 'action=control_light&light=' + light + '&value=' + value;
-            xhr.send(params);
+
+            var params = {
+                action: 'control_light',
+                light: parseInt(light),
+                value: parseInt(value)
+            };
+
+            xhr.send(JSON.stringify(params));
         }
 
-        // Function to check light status and display it using GET
+        // Function to check light status and display it using GET with query string
         function checkLightStatus() {
+            var light = document.getElementById('light_check').value;
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "script.php?action=check_light&light=" + document.getElementById('light_check').value, true);
+            xhr.open("GET", "script.php?action=check_light&light=" + light, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -41,10 +48,11 @@
             xhr.send();
         }
 
-        // Function to check door status and display it using GET
+        // Function to check door status and display it using GET with query string
         function checkDoorStatus() {
+            var door = document.getElementById('door_check').value;
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "script.php?action=check_door&door=" + document.getElementById('door_check').value, true);
+            xhr.open("GET", "script.php?action=check_door&door=" + door, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -57,7 +65,7 @@
             xhr.send();
         }
 
-        // Function to capture the image and display it using GET
+        // Function to capture the image and display it using GET (no JSON needed)
         function captureImage() {
             var xhr = new XMLHttpRequest();
             xhr.open("GET", "script.php?action=check_camera", true);
@@ -79,7 +87,7 @@
 <body>
     <h1>GPIO and Camera Control</h1>
 
-    <!-- Form to control light using POST -->
+    <!-- Form to control light using POST with JSON -->
     <h3>Control Light</h3>
     <label for="light">Select Light:</label>
     <select name="light" id="light">
