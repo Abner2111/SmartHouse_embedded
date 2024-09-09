@@ -25,11 +25,10 @@
             xhr.send(params);
         }
 
-        // Function to check light status and display it
+        // Function to check light status and display it using GET
         function checkLightStatus() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "script.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.open("GET", "script.php?action=check_light&light=" + document.getElementById('light_check').value, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -39,17 +38,13 @@
                     document.getElementById('light_status').textContent = "Error checking light status.";
                 }
             };
-
-            var light = document.getElementById('light_check').value;
-            var params = 'action=check_light&light=' + light;
-            xhr.send(params);
+            xhr.send();
         }
 
-        // Function to check door status and display it
+        // Function to check door status and display it using GET
         function checkDoorStatus() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "script.php", true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.open("GET", "script.php?action=check_door&door=" + document.getElementById('door_check').value, true);
             xhr.onload = function () {
                 if (xhr.status === 200) {
                     var response = JSON.parse(xhr.responseText);
@@ -59,16 +54,13 @@
                     document.getElementById('door_status').textContent = "Error checking door status.";
                 }
             };
-
-            var door = document.getElementById('door_check').value;
-            var params = 'action=check_door&door=' + door;
-            xhr.send(params);
+            xhr.send();
         }
 
-        // Function to capture the image and display it
+        // Function to capture the image and display it using GET
         function captureImage() {
             var xhr = new XMLHttpRequest();
-            xhr.open("POST", "script.php", true);
+            xhr.open("GET", "script.php?action=check_camera", true);
             xhr.responseType = "blob"; // Expect binary data (image)
             xhr.onload = function () {
                 if (xhr.status === 200) {
@@ -80,17 +72,14 @@
                     document.getElementById('camera_result').innerHTML = 'Error capturing image.';
                 }
             };
-
-            var formData = new FormData();
-            formData.append('action', 'check_camera');
-            xhr.send(formData);
+            xhr.send();
         }
     </script>
 </head>
 <body>
     <h1>GPIO and Camera Control</h1>
 
-    <!-- Form to control light using AJAX -->
+    <!-- Form to control light using POST -->
     <h3>Control Light</h3>
     <label for="light">Select Light:</label>
     <select name="light" id="light">
@@ -109,7 +98,7 @@
     <!-- Area to display control response -->
     <p id="control_message"></p>
 
-    <!-- Form to check light status using AJAX -->
+    <!-- Form to check light status using GET -->
     <h3>Check Light Status</h3>
     <label for="light_check">Select Light:</label>
     <select name="light_check" id="light_check">
@@ -125,7 +114,7 @@
     <!-- Area to display light status -->
     <p id="light_status"></p>
 
-    <!-- Form to check door status using AJAX -->
+    <!-- Form to check door status using GET -->
     <h3>Check Door Status</h3>
     <label for="door_check">Select Door:</label>
     <select name="door_check" id="door_check">
@@ -140,10 +129,10 @@
     <!-- Area to display door status -->
     <p id="door_status"></p>
 
-    <!-- Button to capture image -->
+    <!-- Button to capture image using GET -->
     <h3>Capture Image</h3>
     <button onclick="captureImage()">Capture Image</button>
-    
+
     <!-- Area to display captured image -->
     <div id="camera_result"></div>
 </body>

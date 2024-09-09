@@ -1,90 +1,83 @@
 <?php
 
-if ($_POST['action'] == 'control_light') {   
+if ($_POST['action'] == 'control_light') {
     $command = "gpio_handler write";
     $gpio_pin = "";
     $value = $_POST['value'];
     $space = " ";
-
-    if ($_POST['light'] == 1) {
+    $light = $_POST['light'];
+    if ( $light== 1) {
         $gpio_pin = "17";
-    } elseif ($_POST['light'] == 2) {
+    } elseif ($light == 2) {
         $gpio_pin = "27";
-    } elseif ($_POST['light'] == 3) {
+    } elseif ($light== 3) {
         $gpio_pin = "22";
-    } elseif ($_POST['light'] == 4) {
+    } elseif ($light == 4) {
         $gpio_pin = "23";
-    } elseif ($_POST['light'] == 5) {
+    } elseif ($light == 5) {
         $gpio_pin = "24";
-    } 
-    
-    system($command . $space . $gpio_pin . $space . $value);
-    $light_status = " ";
-    if($value == '1'){
-        $light_status = "ON";
-    } else {
-        $light_status = "OFF";
     }
-    echo json_encode(["message" => "Light $value set to $light_status"]);
+
+    system($command . $space . $gpio_pin . $space . $value);
+    $light_status = ($value == '1') ? "ON" : "OFF";
+    echo json_encode(["message" => "Light $light set to $light_status"]);
 }
 
-    if($_POST['action'] == 'check_light'){
-        $command = "gpio_handler read";
-        $gpio_pin = "";
-        $space = " ";
-        if($_POST['light'] == 1){
-            $gpio_pin = "21";
-        } elseif ($_POST['light'] == 2){
-            $gpio_pin = "20";
-        } elseif ($_POST['light'] == 3){
-            $gpio_pin = "16";
-        } elseif ($_POST['light'] == 4){
-            $gpio_pin = "12";
-        } elseif ($_POST['light'] == 5){
-            $gpio_pin = "7";
-        } 
-        $output = shell_exec($command . $space . $gpio_pin);
-        echo json_encode([
-            "light" => $_POST['light'], 
-            "status" => trim($output)
-        ]);
+if ($_GET['action'] == 'check_light') {
+    $command = "gpio_handler read";
+    $gpio_pin = "";
+
+    if ($_GET['light'] == 1) {
+        $gpio_pin = "21";
+    } elseif ($_GET['light'] == 2) {
+        $gpio_pin = "20";
+    } elseif ($_GET['light'] == 3) {
+        $gpio_pin = "16";
+    } elseif ($_GET['light'] == 4) {
+        $gpio_pin = "12";
+    } elseif ($_GET['light'] == 5) {
+        $gpio_pin = "7";
     }
-    if($_POST['action'] == 'check_door'){
-        $command = "gpio_handler read";
-        $gpio_pin = "";
-        $space = " ";
-        if($_POST['door'] == 1){
-            $gpio_pin = "5";
-        } elseif ($_POST['door'] == 2){
-            $gpio_pin = "6";
-        } elseif ($_POST['door'] == 3){
-            $gpio_pin = "13";
-        } elseif ($_POST['door'] == 4){
-            $gpio_pin = "19";
-        }
-        $output = shell_exec($command . $space . $gpio_pin);
-        echo json_encode([
-            "door" => $_POST['door'], 
-            "status" => trim($output)
-        ]);
+    $output = shell_exec($command . ' ' . $gpio_pin);
+    echo json_encode([
+        "light" => $_GET['light'],
+        "status" => trim($output)
+    ]);
+}
+
+if ($_GET['action'] == 'check_door') {
+    $command = "gpio_handler read";
+    $gpio_pin = "";
+
+    if ($_GET['door'] == 1) {
+        $gpio_pin = "5";
+    } elseif ($_GET['door'] == 2) {
+        $gpio_pin = "6";
+    } elseif ($_GET['door'] == 3) {
+        $gpio_pin = "13";
+    } elseif ($_GET['door'] == 4) {
+        $gpio_pin = "19";
     }
-    if ($_POST['action'] == 'check_camera') {
-        $image_file = '/tmp/captured_image.jpeg'; 
-        $command = "fswebcam -r 640x480 --jpeg -D 1 $image_file"; 
-    
-        system($command);
-  
-        if (file_exists($image_file)) {
-            header('Content-Type: image/jpeg');
-            header('Content-Length: ' . filesize($image_file));
-            readfile($image_file);
-            unlink($image_file); 
-        } else {
-            echo "Error capturing image.";
-        }
+    $output = shell_exec($command . ' ' . $gpio_pin);
+    echo json_encode([
+        "door" => $_GET['door'],
+        "status" => trim($output)
+    ]);
+}
+
+if ($_GET['action'] == 'check_camera') {
+    $image_file = '/tmp/captured_image.jpeg';
+    $command = "fswebcam -r 640x480 --jpeg -D 1 $image_file";
+
+    system($command);
+
+    if (file_exists($image_file)) {
+        header('Content-Type: image/jpeg');
+        header('Content-Length: ' . filesize($image_file));
+        readfile($image_file);
+        unlink($image_file);
+    } else {
+        echo "Error capturing image.";
     }
-    
-    
-    
-    
+}
 ?>
