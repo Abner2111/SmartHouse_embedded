@@ -2,12 +2,16 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'base_url.dart';
+import 'dart:typed_data';
+import 'package:image/image.dart' as img;
 
 class AuthController extends GetxController{
   final createAccountUrl = Uri.parse('$baseUrl/api/users/create-account');
   final signInUrl = Uri.parse('$baseUrl/api/users/sign-in');
-  final turnLightOnUrl = Uri.parse('$baseUrl/api/house/turn-light-on');
-  final turnLightOffUrl = Uri.parse('$baseUrl/api/house/turn-light-off');
+  final turnLightOnUrl = Uri.parse(houseUrl);
+  final turnLightOffUrl = Uri.parse(houseUrl);
+  String checkLightStatusUrl = ('$houseUrl/script.php?action=check_light&light=');
+
   //Agregar mas funcionalidades si es necesario 
 
   RxBool isSignedIn = false.obs;
@@ -75,8 +79,8 @@ class AuthController extends GetxController{
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'action': "control_light",
-            'light': lightNo,
-            'value': 1
+            'light': lightNo.toString(),
+            'value': "1"
           },
          ),
         );
@@ -142,23 +146,39 @@ class AuthController extends GetxController{
     int doorNo, 
     ) async{
       try{
-        var checkLightData = await http.post(
-          turnLightOffUrl,
-          headers: {'Content-Type': 'application/json'},
-          body: jsonEncode({
-            'action': "check_door",
-            'light': doorNo
-          },
-         ),
+
+        var checkLightData = await http.get(
+          Uri.parse('$houseUrl/script.php?action=check_door&door=$doorNo'), 
         );
         if(checkLightData.statusCode == 200){
-          return checkLightData.body.toString();
+          if (checkLightData.statusCode == 200) {
+            var responseBody = jsonDecode(checkLightData.body);
+            var specificValue = responseBody['status'];
+            return specificValue.toString();
+          } else {
+            return checkLightData.body.toString();
+          }
         }
         else{
           return checkLightData.body.toString();
         }
       }catch(error){
         return '$error';
+      }
+    }
+
+    Future<http.Response> takePicture() async {
+      try {
+        var pictureData = await http.get(
+          Uri.parse('$houseUrl/script.php?action=check_camera'), 
+        );
+        if (pictureData.statusCode == 200) {
+          return pictureData;
+        } else {
+          throw Exception('Failed to retrieve picture');
+        }
+      } catch (error) {
+        throw Exception('Error: $error');
       }
     }
 

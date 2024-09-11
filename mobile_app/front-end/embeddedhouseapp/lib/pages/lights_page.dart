@@ -1,9 +1,6 @@
+import 'dart:typed_data';
+
 import 'package:embeddedhouseapp/dialogs/sign_out_dialog.dart';
-import 'package:embeddedhouseapp/dialogs/turn_off_light_1.dart';
-import 'package:embeddedhouseapp/dialogs/turn_off_light_2.dart';
-import 'package:embeddedhouseapp/dialogs/turn_off_light_3.dart';
-import 'package:embeddedhouseapp/dialogs/turn_off_light_4.dart';
-import 'package:embeddedhouseapp/dialogs/turn_off_light_5.dart';
 import 'package:embeddedhouseapp/dialogs/turn_on_light_1.dart';
 import 'package:embeddedhouseapp/dialogs/turn_on_light_2.dart';
 import 'package:embeddedhouseapp/dialogs/turn_on_light_3.dart';
@@ -15,8 +12,10 @@ import 'package:get/get.dart';
 //import 'package:embeddedhouseapp/pages/camera_page.dart';
 import 'package:embeddedhouseapp/utilities/dependencies.dart' as dependencies;
 
+import 'package:image/image.dart' as img;
+
 class LightsPage extends StatefulWidget{
-  const LightsPage({Key? key});
+  const LightsPage({super.key});
 
   @override
   State<LightsPage> createState() => _LightsPageState();
@@ -124,6 +123,7 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage1 = 1;
+                        Get.find<dependencies.AuthController>().turnLightOn(1);
                         return const TurnOnLight1();
                       },
                     );
@@ -138,7 +138,8 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage1 = 0;
-                        return const TurnOffLight1();
+                        Get.find<dependencies.AuthController>().turnLightOff(1);
+                        return const TurnOnLight1();
                       },
                     );
                   }
@@ -162,6 +163,7 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage2 = 1;
+                        Get.find<dependencies.AuthController>().turnLightOn(2);
                         return const TurnOnLight2();
                       },
                     );
@@ -176,7 +178,8 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage2 = 0;
-                        return const TurnOffLight2();
+                        Get.find<dependencies.AuthController>().turnLightOff(2);
+                        return const TurnOnLight2();
                       },
                     );
                   }
@@ -200,6 +203,7 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage3 = 1;
+                        Get.find<dependencies.AuthController>().turnLightOn(3);
                         return const TurnOnLight3();
                       },
                     );
@@ -214,7 +218,8 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage3 = 0;
-                        return const TurnOffLight3();
+                        Get.find<dependencies.AuthController>().turnLightOff(3);
+                        return const TurnOnLight3();
                       },
                     );
                   }
@@ -238,6 +243,7 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage4 = 1;
+                        Get.find<dependencies.AuthController>().turnLightOn(4);
                         return const TurnOnLight4();
                       },
                     );
@@ -252,7 +258,8 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage4 = 0;
-                        return const TurnOffLight4();
+                        Get.find<dependencies.AuthController>().turnLightOff(4);
+                        return const TurnOnLight4();
                       },
                     );
                   }
@@ -276,6 +283,7 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage5 = 1;
+                        Get.find<dependencies.AuthController>().turnLightOn(5);
                         return const TurnOnLight5();
                       },
                     );
@@ -290,7 +298,8 @@ class _LightsPageState extends State<LightsPage>{
                       context: context,
                       builder: (context){
                         currImage5 = 0;
-                        return const TurnOffLight5();
+                        Get.find<dependencies.AuthController>().turnLightOff(5);
+                        return const TurnOnLight5();
                       },
                     );
                   }
@@ -308,8 +317,46 @@ class _LightsPageState extends State<LightsPage>{
                   width: 50,
                   height: 50,
                 ),
-                onTap: (){
-                  //AGREGAR DIALOGO PARA ESTADO DE PUERTAS
+                onTap: () async {
+                  var doorStatus = await Get.find<dependencies.AuthController>().checkDoorStatus(1);
+                  if(doorStatus == '0'){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is open'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is closed'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               GestureDetector(
@@ -318,8 +365,46 @@ class _LightsPageState extends State<LightsPage>{
                   width: 50,
                   height: 50,
                 ),
-                onTap: (){
-                  //AGREGAR DIALOGO PARA ESTADO DE PUERTAS
+                onTap: ()async {
+                  var doorStatus = await Get.find<dependencies.AuthController>().checkDoorStatus(2);
+                  if(doorStatus == '0'){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is open'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is closed'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               GestureDetector(
@@ -328,8 +413,46 @@ class _LightsPageState extends State<LightsPage>{
                   width: 50,
                   height: 50,
                 ),
-                onTap: (){
-                  //AGREGAR DIALOGO PARA ESTADO DE PUERTAS
+                onTap: ()async {
+                  var doorStatus = await Get.find<dependencies.AuthController>().checkDoorStatus(3);
+                  if(doorStatus == '0'){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is open'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is closed'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               GestureDetector(
@@ -338,8 +461,46 @@ class _LightsPageState extends State<LightsPage>{
                   width: 50,
                   height: 50,
                 ),
-                onTap: (){
-                  //AGREGAR DIALOGO PARA ESTADO DE PUERTAS
+                onTap: ()async {
+                  var doorStatus = await Get.find<dependencies.AuthController>().checkDoorStatus(4);
+                  if(doorStatus == '0'){
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is open'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
+                  else{
+                    showDialog(
+                      context: context,
+                      builder: (context){
+                        return AlertDialog(
+                          title: const Text('Door Status'),
+                          content: const Text('The door is closed'),
+                          actions: [
+                            TextButton(
+                              onPressed: (){
+                                Navigator.of(context).pop();
+                              },
+                              child: const Text('Close'),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
               ),
               GestureDetector(
@@ -357,22 +518,40 @@ class _LightsPageState extends State<LightsPage>{
               const Text('Bedroom 1', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), ),
               const Text('Bedroom 2', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), ),
               const Text('Dummy', textAlign: TextAlign.center, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold), ),
-
-                ElevatedButton.icon(
-                onPressed: (){
-                  //DIALOGO PARA CAMARA
+              ElevatedButton.icon(
+                onPressed: () async {
+                  var image_cam = await Get.find<dependencies.AuthController>().takePicture();
+                  print(image_cam);
+                  showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: const Text('Image'),
+                        content: image_cam.statusCode == 200
+                            ? Image.memory(
+                                Uint8List.fromList(
+                                img.encodeJpg(
+                                  img.decodeImage(image_cam.bodyBytes) ?? img.Image(1, 1),
+                                ),)
+                                
+                              )
+                            : const Text('Failed to retrieve image'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
                 icon: const Icon(Icons.camera_alt),
                 label: const Text('Take picture'),
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                ),
-                ),
-
-            ], // Add a closing square bracket here
+              ),
+            ],
             
           ),
         ],
